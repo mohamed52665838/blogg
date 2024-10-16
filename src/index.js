@@ -18,18 +18,17 @@ mongoose
 
 const userRouter = require("./routes/user.route.js");
 const postRouter = require("./routes/post.route.js");
-const createCategorie = require("./controller/categorie.controller.js");
-const createCommentaire = require("./controller/commentaire.controller.js");
+const commentaireRouter=require("./routes/commentaire.route.js")
+const categorieRoute = require("./routes/categorie.route.js");
 
 
 app.use("/user", userRouter);
 
-app.use("/post", postRouter);
+app.use("/post", postRouter);//chneselk yani b hedi nhot /post/create
+app.use("/commentaire",commentaireRouter)
 
+app.use("/categorie",categorieRoute)
 
-
-app.post("/categorie/create", createCategorie); //path heka ta chnwa ! o ta3mir fi postman
-app.post("/commentaire/create", createCommentaire); //path heka ta chnwa ! o ta3mir fi postman
 
 const port = 4000;
 app.listen(port, () => {
