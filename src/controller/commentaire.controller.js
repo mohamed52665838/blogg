@@ -1,7 +1,7 @@
 const Commentaire=require("../model/commentaire.model")
 
 const createCommentaire= async(req,res)=>{
-    const {contenu,user}=req.body;
+    const {contenu,userId,postId}=req.body;
     console.log(contenu)
     
   
@@ -12,7 +12,8 @@ const createCommentaire= async(req,res)=>{
        
         const newCommentaire=new Commentaire({
             contenu,
-            user,
+            userId,
+            postId
         });
         const commentaire=await newCommentaire.save();
         res.status(201).json(commentaire);
@@ -32,9 +33,12 @@ const getCommentaireById = async (req, res) => {
       }
       const commentaire = await Commentaire.findOne({ _id: id }).populate({
 
-        path:"user",
+        path:"userId",
         select:"email"
         
+      }).populate({
+        path:"postId",
+        select:"_id"
       });
       res.status(200).json(commentaire);
     } catch (err) {
@@ -45,7 +49,7 @@ const getCommentaireById = async (req, res) => {
     try {
       const commentaire = await Commentaire.find().populate({
 
-        path:"user",
+        path:"userId",
         select:"email"
 
 
@@ -60,7 +64,7 @@ const getCommentaireById = async (req, res) => {
 
   const updateCommentaire = async (req, res) => {
     const id = req.params.id;
-    const contenu = req.body;
+    const {contenu} = req.body;
     try {
       const commentaireExsiste = await Commentaire.findOne({ _id: id });
       if (!commentaireExsiste) {
@@ -97,6 +101,7 @@ const getCommentaireById = async (req, res) => {
   
   // Function to delete all users
   const deleteAllComments = async (req, res) => {
+   console.log("here")
     try {
       const result = await Commentaire.deleteMany(); // This deletes all users in the collection
       res.status(200).json({
@@ -104,6 +109,7 @@ const getCommentaireById = async (req, res) => {
         deletedCount: result.deletedCount,
       });
     } catch (err) {
+      console.log(err)
       res.status(500).json(err);
     }
   };

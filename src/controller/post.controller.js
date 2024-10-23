@@ -1,7 +1,7 @@
 const Post = require("../model/post.model");
 
 const createPost = async (req, res) => {
-  const { title, description,author } = req.body;
+  const { title, description,authorId } = req.body;
   try {
     if (!title) {
       return res.status(400).json({ error: "champ vide" });
@@ -10,7 +10,7 @@ const createPost = async (req, res) => {
     const newPost = new Post({
       title,
       description,
-      author
+      author:authorId,
     });
     const post = await newPost.save();
     res.status(201).json(post);
@@ -29,8 +29,9 @@ const getPostById = async (req, res) => {
       return res.status(404).json({ error: "post n'existe pas" });
     }
     const post = await Post.findOne({ _id: id }).populate({
-        path:"author",
-        select:"email"
+        path:"author",//ism el attribut fi model
+        select:"email",
+      
     })
     res.status(200).json(post);
   } catch (err) {
@@ -42,7 +43,8 @@ const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find().populate({
         path:"author",
-        select:"email"
+        select:"email",
+       
     });
     res.status(200).json(posts);
   } catch (err) {
@@ -63,7 +65,7 @@ const updatePost = async (req, res) => {
     const updatedPost = await Post.findByIdAndUpdate(
       id,
       { title, description },
-      { new: true }
+      { new: true }//new true bich iraj3lna resultat modifie
     );
 
     res.status(200).json(updatedPost);
@@ -76,13 +78,14 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
   const id = req.params.id;
   try {
-    const postExist = await User.findOne({ _id: id });
+    const postExist = await Post.findOne({ _id: id });
     if (!postExist) {
       return res.status(404).json({ error: "user n'existe pas" });
     }
     await Post.deleteOne({ _id: id });
     res.status(200).json({ message: "user supprimé avec succès" });
   } catch (err) {
+    console.log(err)
     res.status(500).json(err);
   }
 };

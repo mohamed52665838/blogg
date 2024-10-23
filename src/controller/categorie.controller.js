@@ -1,7 +1,7 @@
 const Categorie=require("../model/categorie.model")
 
 const createCategorie= async(req,res)=>{
-    const {nom}=req.body;
+    const nom=req.body;
     console.log(nom)
     const data=req.body;
     console.log(data.nom)
@@ -54,20 +54,20 @@ const getCategoriebyid = async (req, res) => {
 
   const updateCategorie = async (req, res) => {
     const id = req.params.id;
-    const nom = req.body;
+    const {nom} = req.body;
     try {
       const categorieExsiste = await Categorie.findOne({ _id: id });
       if (!categorieExsiste) {
         return res.status(404).json({ error: "categorie n'existe pas" });
       }
-  
-      const updatecategorie = await Categorie.findByIdAndUpdate(
+      
+      const updatedCategorie = await Categorie.findByIdAndUpdate(
         id,
         { nom },
         { new: true }
       );
-  
-      res.status(200).json(updateCategorie);
+      // rak kont msmi l variable fl const nfsou ism l func
+      res.status(200).json(updatedCategorie);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
